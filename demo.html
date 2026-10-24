@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Buddy & Budder — พรีวิวดีไซน์</title>
+<link rel="icon" href="assets/app_icon.png">
+<link rel="stylesheet" href="assets/app.css">
+<style>
+  .demo-label{max-width:860px;margin:36px auto 0;padding:0 16px;color:var(--navy);font-weight:800;font-size:1.15rem;display:flex;align-items:center;gap:10px}
+  .demo-label .n{background:var(--blue);color:#fff;width:28px;height:28px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:.9rem}
+  .demo-note{max-width:860px;margin:2px auto 0;padding:0 16px;color:var(--muted);font-size:.9rem}
+  .frame{max-width:860px;margin:10px auto;border:2px dashed var(--sky);border-radius:20px;overflow:hidden;background:var(--bg)}
+  .mini-top{background:var(--navy);color:#fff;padding:12px 16px;display:flex;align-items:center;gap:10px}
+  .mini-top img{height:32px}.mini-top .t{font-weight:700}.mini-top .sp{flex:1}
+  .mini-top .pill{background:rgba(255,255,255,.16);padding:4px 12px;border-radius:999px;font-size:.78rem}
+  .frame .wrap{padding:14px 16px 24px}
+  body{background:#f4f8ff}
+</style>
+</head>
+<body>
+
+<div style="background:var(--navy);color:#fff;text-align:center;padding:22px">
+  <img src="assets/logo_white.png" style="height:46px"><br>
+  <span style="opacity:.85;font-size:.95rem">พรีวิวดีไซน์ · ข้อมูลตัวอย่าง (ของจริงจะเชื่อม Firebase)</span>
+</div>
+
+<!-- 1. PLAYER -->
+<div class="demo-label"><span class="n">1</span>หน้าผู้เล่น — กรอกเฉลยลับ + ทาย</div>
+<div class="demo-note">แต่ละคนเลือกชื่อตัวเองแล้วมาหน้านี้</div>
+<div class="frame">
+  <div class="mini-top"><img src="assets/logo_white.png"><span class="t">Buddy &amp; Budder</span><span class="sp"></span><span class="pill">👤 สมชาย</span></div>
+  <div class="wrap">
+    <div class="card">
+      <h2>ส่วนที่ 1 · เฉลยลับของคุณ 🤫</h2>
+      <p class="sub">คุณคือ <b>สมชาย</b> — คุณจับสลากได้ชื่อใคร? (ไม่มีใครเห็น ใช้เป็นเฉลยตอนจบ)</p>
+      <label>ฉันจับได้ →</label>
+      <select><option>มานี</option></select>
+    </div>
+    <div class="card">
+      <h2>ส่วนที่ 2 · ทายว่าคนอื่นจับได้ใคร 🎯</h2>
+      <p class="sub">ทายให้ครบทุกคนเพื่อลุ้นคะแนนสูงสุด (ข้ามได้ถ้าไม่แน่ใจ)</p>
+      <div class="guess-row"><div class="who">สมหญิง</div><select><option>ปิติ</option></select></div>
+      <div class="guess-row"><div class="who">มานี</div><select><option>สมชาย</option></select></div>
+      <div class="guess-row"><div class="who">ปิติ</div><select><option>— ยังไม่ทาย —</option></select></div>
+      <div class="guess-row"><div class="who">วีระ</div><select><option>ชูใจ</option></select></div>
+    </div>
+    <button class="btn big">ส่งคำตอบ</button>
+  </div>
+</div>
+
+<!-- 2. PLAYER RESULT -->
+<div class="demo-label"><span class="n">2</span>หน้าผู้เล่น — หลังเฉลย</div>
+<div class="demo-note">คะแนนและอันดับโผล่เมื่อแอดมินกดเฉลย</div>
+<div class="frame">
+  <div class="mini-top"><img src="assets/logo_white.png"><span class="t">Buddy &amp; Budder</span><span class="sp"></span><span class="pill">👤 สมชาย</span></div>
+  <div class="wrap">
+    <div class="card center">
+      <h2>คะแนนของคุณ</h2>
+      <div style="font-size:3rem;font-weight:800;color:var(--blue)">5<span style="font-size:1.2rem;color:var(--muted)">/7</span></div>
+      <p class="sub">อันดับที่ 2 จาก 8 คน</p>
+    </div>
+    <div class="card"><h2>🏆 อันดับคะแนน</h2>
+      <div class="lb-row top1"><div class="rk">🥇</div><div class="nm">ชูใจ</div><div class="sc">6</div></div>
+      <div class="lb-row top2"><div class="rk">🥈</div><div class="nm">สมชาย (คุณ)</div><div class="sc">5</div></div>
+      <div class="lb-row top3"><div class="rk">🥉</div><div class="nm">มานี</div><div class="sc">4</div></div>
+      <div class="lb-row"><div class="rk">4</div><div class="nm">วีระ</div><div class="sc">3</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- 3. ADMIN -->
+<div class="demo-label"><span class="n">3</span>หน้าแอดมิน — คุมเกม</div>
+<div class="demo-note">ตั้งรายชื่อ เปิดเกม ดูสดใครทำครบ กดเฉลย</div>
+<div class="frame">
+  <div class="mini-top"><img src="assets/logo_white.png"><span class="t">แผงควบคุมผู้ดูแล</span><span class="sp"></span><span class="pill">เปิดให้ทาย 🟢</span></div>
+  <div class="wrap">
+    <div class="card"><h2>2 · สถานะเกม</h2>
+      <div class="stats" style="margin-bottom:14px">
+        <div class="stat"><b>8</b><span>ผู้เล่น</span></div>
+        <div class="stat"><b>6</b><span>กรอกเฉลยแล้ว</span></div>
+        <div class="stat"><b>5</b><span>ทายแล้ว</span></div>
+      </div>
+      <div class="note">กำลังเปิดรับคำตอบ — เมื่อครบแล้วกดปุ่มด้านล่างเพื่อเฉลย</div>
+      <div style="height:12px"></div>
+      <button class="btn big warn">🏆 เฉลย &amp; คำนวณคะแนน</button>
+    </div>
+    <div class="card"><h2>3 · ความคืบหน้า (อัปเดตสด)</h2>
+      <table><thead><tr><th>ชื่อ</th><th>เฉลย</th><th>ทาย</th><th></th></tr></thead><tbody>
+        <tr><td>สมชาย</td><td><span class="tag yes">✓</span></td><td><span class="tag yes">✓</span></td><td><button class="btn ghost" style="padding:5px 10px;font-size:.82rem">ล้าง</button></td></tr>
+        <tr><td>สมหญิง</td><td><span class="tag yes">✓</span></td><td><span class="tag no">ยัง</span></td><td><button class="btn ghost" style="padding:5px 10px;font-size:.82rem">ล้าง</button></td></tr>
+        <tr><td>ปิติ</td><td><span class="tag no">ยัง</span></td><td><span class="tag no">ยัง</span></td><td><button class="btn ghost" style="padding:5px 10px;font-size:.82rem">ล้าง</button></td></tr>
+      </tbody></table>
+    </div>
+  </div>
+</div>
+
+<!-- 4. BOARD -->
+<div class="demo-label"><span class="n">4</span>หน้าจอใหญ่ — ฉายตอนประกาศผล</div>
+<div class="demo-note">พื้นน้ำเงิน ตัวใหญ่ อ่านง่ายบนโปรเจกเตอร์</div>
+<div class="frame" style="border-color:#2a4fa0">
+  <div class="board-bg">
+    <div class="board-wrap" style="padding:26px 20px">
+      <div style="text-align:center"><img src="assets/logo_white.png" style="height:48px;margin:6px 0"><h1 style="font-size:1.8rem;margin:6px 0 18px">🏆 อันดับคะแนน</h1></div>
+      <div class="lb-row top1"><div class="rk">🥇</div><div class="nm">ชูใจ</div><div class="sc">6</div></div>
+      <div class="lb-row top2"><div class="rk">🥈</div><div class="nm">สมชาย</div><div class="sc">5</div></div>
+      <div class="lb-row top3"><div class="rk">🥉</div><div class="nm">มานี</div><div class="sc">4</div></div>
+      <div class="lb-row"><div class="rk">4</div><div class="nm">วีระ</div><div class="sc">3</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="footer" style="padding:30px">ดีไซน์ตามโทนสีที่กำหนด · นี่เป็นพรีวิวหน้าตาเท่านั้น</div>
+</body>
+</html>
