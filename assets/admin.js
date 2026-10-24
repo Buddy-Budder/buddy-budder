@@ -26,16 +26,19 @@ function gate() {
     <div class="card" style="max-width:380px;margin:40px auto">
       <h2>เข้าสู่แผงผู้ดูแล</h2>
       <p class="sub">ใส่รหัสผู้ดูแล</p>
-      <input type="password" id="pin" placeholder="รหัสผ่าน" autofocus>
+      <input type="password" id="pin" placeholder="รหัสผ่าน" inputmode="numeric" autocomplete="off" autofocus>
       <div id="err"></div><div style="height:12px"></div>
       <button class="btn big" id="ok">เข้าสู่ระบบ</button>
     </div>`;
+  const pinEl = document.getElementById("pin");
+  // กรองให้เหลือเฉพาะตัวเลข — กันแป้นพิมพ์ไทย/ช่องว่าง/autofill พิมพ์ตัวอักษรอื่นปนเข้ามา
+  pinEl.addEventListener("input", (e) => { e.target.value = e.target.value.replace(/\D/g, "").slice(0, 8); });
   const go = () => {
-    if (document.getElementById("pin").value === ADMIN_PIN) { sessionStorage.setItem("bb_admin","1"); start(); }
+    if (pinEl.value === ADMIN_PIN) { sessionStorage.setItem("bb_admin","1"); start(); }
     else document.getElementById("err").innerHTML = "<div class='note'>รหัสไม่ถูกต้อง</div>";
   };
   document.getElementById("ok").onclick = go;
-  document.getElementById("pin").onkeydown = (e) => e.key === "Enter" && go();
+  pinEl.onkeydown = (e) => e.key === "Enter" && go();
 }
 
 async function start() {
