@@ -2,11 +2,24 @@
 // เก็บรหัส 4 หลักเป็นค่า hash (SHA-256 ผสม pid) ใน players/{id} เพื่อไม่ให้ใครอ่านรหัสจริงได้
 import { db } from "./db.js";
 import {
-  doc, getDoc, setDoc, deleteDoc, onSnapshot, collection,
+  doc, getDoc, setDoc, deleteDoc, onSnapshot, collection, updateDoc,
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const playersCol = () => collection(db, "players");
 const playerRef = (pid) => doc(db, "players", pid);
+const stateRef = () => doc(db, "game", "state");
+
+// ตั้ง/ล้างวันเวลาปิดรับคำตอบ — เก็บเป็น epoch ms ในเอกสาร game/state (null = ไม่มีกำหนด)
+// เขียนลงเอกสารเดิมที่ db.js ใช้อยู่ จึงไม่ต้องแก้ db.js และไม่ต้องสร้าง collection ใหม่
+export async function setDeadline(ms) {
+  await updateDoc(stateRef(), { deadline: ms ?? null });
+}
+
+// เปิด/ปิดให้ผู้เล่นกรอก "เฉลยลับ" (ส่วนที่ 1) — ค่าเริ่มต้นถือว่าปิด (ยังไม่มีฟิลด์ = ล็อก)
+// เขียนลงเอกสาร game/state เดิม จึงไม่ต้องแก้ db.js และไหลเข้า watchState อัตโนมัติ
+export async function setTruthOpen(open) {
+  await updateDoc(stateRef(), { truthOpen: !!open });
+}
 
 // แปลงรหัส 4 หลักเป็นลายนิ้วมือ (hash) — ผูกกับ pid เพื่อให้รหัสซ้ำกันได้ค่าต่างกัน
 async function hashPin(pid, pin) {

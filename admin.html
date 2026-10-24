@@ -16,7 +16,10 @@
       <a href="board.html" class="nav-item"><span class="ic">🏆</span>ประกาศผล</a>
       <a href="admin.html" class="nav-item active"><span class="ic">⚙️</span>ผู้ดูแล</a>
     </nav>
-    <div class="side-foot">Buddy &amp; Budder</div>
+    <div class="side-foot">
+      <div class="side-user"><span class="su-ic">👤</span><span id="userTag">Admin</span></div>
+      <button class="btn ghost side-logout" id="logout">↩︎ ออกจากระบบ</button>
+    </div>
   </aside>
   <div class="content">
     <header class="topbar">
@@ -24,7 +27,6 @@
       <span class="page-title">แผงควบคุมผู้ดูแล</span>
       <span class="sp"></span>
       <span class="pill" id="phaseTag">—</span>
-      <button class="bell" aria-label="การแจ้งเตือน">🔔</button>
     </header>
     <main class="wrap wide" id="app"><div class="card center"><h2>กำลังโหลด…</h2></div></main>
   </div>

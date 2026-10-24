@@ -2,6 +2,7 @@
 import { EVENT_NAME } from "./firebase-config.js";
 import { watchState } from "./db.js";
 import { registerPlayer, verifyPin, watchPlayers, isFourDigit } from "./auth-db.js";
+import { enhancePickers } from "./picker.js";
 
 const app = document.getElementById("app");
 const ME_KEY = "bb_me";
@@ -49,6 +50,7 @@ function render() {
       : info("ยังไม่มีใครลงทะเบียน", "คุณเป็นคนแรก! กดด้านล่างเพื่อลงทะเบียน") + switchLink();
   }
   app.innerHTML = frame(body);
+  enhancePickers(app);
   wire();
 }
 
@@ -70,20 +72,21 @@ function opts(list) {
 function registerForm(unreg) {
   return `
     <div class="field"><label>เลือกชื่อของคุณ</label>
-      <select id="who">${opts(unreg)}</select></div>
+      <select id="who" class="pick">${opts(unreg)}</select></div>
     <div class="field"><label>ตั้งรหัสผ่าน (ตัวเลข 4 หลัก)</label>
       <input id="pin" class="pin-input" type="password" inputmode="numeric" maxlength="4" placeholder="••••"></div>
     <div class="field"><label>ยืนยันรหัสผ่านอีกครั้ง</label>
       <input id="pin2" class="pin-input" type="password" inputmode="numeric" maxlength="4" placeholder="••••"></div>
     <div id="err"></div>
     <button class="btn big" id="go">สร้างรหัส &amp; เข้าสู่ระบบ</button>
-    <p class="login-switch">เคยลงทะเบียนแล้ว? <a id="switchMode" data-to="login">เข้าสู่ระบบด้วยรหัสผ่าน</a></p>`;
+    <p class="login-switch" style="margin:14px 0 8px">เคยลงทะเบียนแล้ว?</p>
+    <button class="btn ghost" id="switchMode" data-to="login" style="width:100%">🔑 เข้าสู่ระบบด้วยรหัสผ่าน</button>`;
 }
 
 function loginForm(reg) {
   return `
     <div class="field"><label>เลือกชื่อของคุณ</label>
-      <select id="who">${opts(reg)}</select></div>
+      <select id="who" class="pick">${opts(reg)}</select></div>
     <div class="field"><label>รหัสผ่าน (ตัวเลข 4 หลัก)</label>
       <input id="pin" class="pin-input" type="password" inputmode="numeric" maxlength="4" placeholder="••••"></div>
     <div id="err"></div>
