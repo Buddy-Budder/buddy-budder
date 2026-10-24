@@ -16,18 +16,36 @@ const PHASE_TH = { setup: "ตั้งค่า 🔧", open: "เปิดใ�
 /* ---- ประตูผู้ดูแล ---- */
 // เข้าได้ 2 ทาง: (1) ล็อกอินด้วยชื่อ Admin จากหน้า Login  (2) กรอกรหัสผู้ดูแล 2004 (สำรอง)
 const authedAdmin = localStorage.getItem("bb_auth") === "1" && localStorage.getItem("bb_role") === "admin";
-if (sessionStorage.getItem("bb_admin") === "1" || authedAdmin) {
+// ทางเข้าแบบไม่ต้องพิมพ์: เปิดลิงก์ admin.html?pin=2004 → เข้าเลย แล้วลบรหัสออกจาก URL
+const urlPin = new URLSearchParams(location.search).get("pin") || new URLSearchParams(location.search).get("k");
+if (urlPin && urlPin === ADMIN_PIN) {
+  sessionStorage.setItem("bb_admin", "1");
+  history.replaceState(null, "", location.pathname);
+  start();
+} else if (sessionStorage.getItem("bb_admin") === "1" || authedAdmin) {
   if (authedAdmin) sessionStorage.setItem("bb_admin", "1");
   start();
 } else { gate(); }
 
 function gate() {
   app.innerHTML = `
+    <style>
+      .kpad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}
+      .kpad .kp{padding:16px 0;font-size:20px;font-weight:700;border:1px solid #d6e0f5;border-radius:12px;background:#f5f8ff;color:#1b3b8b;cursor:pointer}
+      .kpad .kp:active{background:#dbe6ff}
+      .kpad .kp-sub{background:#eef2fb;color:#4a5b85;font-size:18px}
+    </style>
     <div class="card" style="max-width:380px;margin:40px auto">
       <h2>เข้าสู่แผงผู้ดูแล</h2>
-      <p class="sub">ใส่รหัสผู้ดูแล</p>
+      <p class="sub">ใส่รหัสผู้ดูแล (พิมพ์ หรือกดปุ่มตัวเลขด้านล่าง)</p>
       <input type="password" id="pin" placeholder="รหัสผ่าน" inputmode="numeric" autocomplete="off" autofocus>
-      <div id="err"></div><div style="height:12px"></div>
+      <div id="err"></div>
+      <div class="kpad" id="kpad">
+        ${["1","2","3","4","5","6","7","8","9","del","0","ok"].map((k) =>
+          k === "del" ? `<button type="button" class="kp kp-sub" data-k="del">⌫</button>`
+          : k === "ok" ? `<button type="button" class="kp kp-sub" data-k="ok">✓</button>`
+          : `<button type="button" class="kp" data-k="${k}">${k}</button>`).join("")}
+      </div>
       <button class="btn big" id="ok">เข้าสู่ระบบ</button>
     </div>`;
   const pinEl = document.getElementById("pin");
@@ -36,6 +54,14 @@ function gate() {
   const go = () => {
     if (pinEl.value === ADMIN_PIN) { sessionStorage.setItem("bb_admin","1"); start(); }
     else document.getElementById("err").innerHTML = "<div class='note'>รหัสไม่ถูกต้อง</div>";
+  };
+  // แป้นตัวเลขกดด้วยนิ้ว — ไม่ต้องใช้คีย์บอร์ดเครื่องเลย
+  document.getElementById("kpad").onclick = (e) => {
+    const b = e.target.closest(".kp"); if (!b) return;
+    const k = b.dataset.k;
+    if (k === "del") pinEl.value = pinEl.value.slice(0, -1);
+    else if (k === "ok") go();
+    else if (pinEl.value.length < 8) pinEl.value += k;
   };
   document.getElementById("ok").onclick = go;
   pinEl.onkeydown = (e) => e.key === "Enter" && go();
