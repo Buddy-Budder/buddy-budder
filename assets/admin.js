@@ -4,16 +4,21 @@ import {
   saveParticipants, setPhase, resetPerson, resetAll,
   getTruthOnce, getGuessesOnce, computeScores, nameOf,
 } from "./db.js";
+import { watchPlayers, resetPlayer } from "./auth-db.js";
 
 const app = document.getElementById("app");
 const phaseTag = document.getElementById("phaseTag");
 
-let state = null, truth = {}, guesses = [];
+let state = null, truth = {}, guesses = [], registered = {};
 const PHASE_TH = { setup: "ตั้งค่า 🔧", open: "เปิดให้ทาย 🟢", revealed: "เฉลยแล้ว 🏆" };
 
-/* ---- PIN gate ---- */
-if (sessionStorage.getItem("bb_admin") !== "1") { gate(); }
-else { start(); }
+/* ---- ประตูผู้ดูแล ---- */
+// เข้าได้ 2 ทาง: (1) ล็อกอินด้วยชื่อ Admin จากหน้า Login  (2) กรอกรหัสผู้ดูแล 2004 (สำรอง)
+const authedAdmin = localStorage.getItem("bb_auth") === "1" && localStorage.getItem("bb_role") === "admin";
+if (sessionStorage.getItem("bb_admin") === "1" || authedAdmin) {
+  if (authedAdmin) sessionStorage.setItem("bb_admin", "1");
+  start();
+} else { gate(); }
 
 function gate() {
   app.innerHTML = `
@@ -37,6 +42,7 @@ async function start() {
   watchState((s) => { state = s; render(); });
   watchTruth((m) => { truth = m; render(); });
   watchGuesses((a) => { guesses = a; render(); });
+  watchPlayers((ids) => { registered = ids; render(); });
 }
 
 function render() {
@@ -122,22 +128,31 @@ function sectionProgress(P) {
   const rows = P.map((p) => {
     const t = truth[p.id] ? `<span class="tag yes">✓</span>` : `<span class="tag no">ยัง</span>`;
     const g = guesses.some((x)=>x.id===p.id) ? `<span class="tag yes">✓</span>` : `<span class="tag no">ยัง</span>`;
-    return `<tr><td>${esc(p.name)}</td><td>${t}</td><td>${g}</td>
-      <td><button class="btn ghost" data-reset="${p.id}" style="padding:5px 10px;font-size:.82rem">ล้าง</button></td></tr>`;
+    const r = registered[p.id]
+      ? `<span class="tag yes">มีรหัส</span> <button class="btn ghost" data-resetpin="${p.id}" style="padding:4px 9px;font-size:.78rem">รีเซ็ตรหัส</button>`
+      : `<span class="tag no">ยังไม่ตั้ง</span>`;
+    return `<tr><td>${esc(p.name)}</td><td>${t}</td><td>${g}</td><td>${r}</td>
+      <td><button class="btn ghost" data-reset="${p.id}" style="padding:5px 10px;font-size:.82rem">ล้างคำตอบ</button></td></tr>`;
   }).join("");
   return `<div class="card"><h2>3 · ความคืบหน้า (อัปเดตสด)</h2>
-    <table><thead><tr><th>ชื่อ</th><th>เฉลย</th><th>ทาย</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>`;
+    <p class="sub">คอลัมน์ "รหัสผ่าน" = ผู้เล่นตั้งรหัส 4 หลักแล้วหรือยัง · ถ้าใครลืมรหัส กด "รีเซ็ตรหัส" ให้เขาตั้งใหม่ได้</p>
+    <table><thead><tr><th>ชื่อ</th><th>เฉลย</th><th>ทาย</th><th>รหัสผ่าน</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>`;
 }
 function wireProgress(P) {
   document.querySelectorAll("[data-reset]").forEach((b) => {
     b.onclick = () => { const p = P.find((x)=>x.id===b.dataset.reset);
       if (confirm(`ล้างคำตอบของ ${p?p.name:""}?`)) resetPerson(b.dataset.reset); };
   });
+  document.querySelectorAll("[data-resetpin]").forEach((b) => {
+    b.onclick = () => { const p = P.find((x)=>x.id===b.dataset.resetpin);
+      if (confirm(`รีเซ็ตรหัสผ่านของ ${p?p.name:""}? เขาจะต้องตั้งรหัส 4 หลักใหม่อีกครั้ง`)) resetPlayer(b.dataset.resetpin); };
+  });
 }
 
 /* ---- 4. ผล (หลังเฉลย) ---- */
 function sectionResults(P) {
-  const scores = computeScores(P, truth, guesses);
+  // ไม่นับ "Admin" (ผู้คุมเกม) ในกระดานคะแนน ให้ตรงกับหน้าผู้เล่น/จอใหญ่
+  const scores = computeScores(P.filter((p) => p.name.trim().toLowerCase() !== "admin"), truth, guesses);
   const lb = scores.map((s) => {
     const medal = s.rank===1?"🥇":s.rank===2?"🥈":s.rank===3?"🥉":s.rank;
     return `<tr><td style="font-weight:700">${medal}</td><td>${esc(s.name)}</td>
@@ -161,7 +176,13 @@ function wireDanger(P) {
   document.getElementById("resetAll").onclick = () => {
     if (confirm("ลบคำตอบทั้งหมดจริงหรือ? (รายชื่อยังอยู่)")) resetAll(P);
   };
-  document.getElementById("logout").onclick = () => { sessionStorage.removeItem("bb_admin"); location.reload(); };
+  document.getElementById("logout").onclick = () => {
+    sessionStorage.removeItem("bb_admin");
+    localStorage.removeItem("bb_me");
+    localStorage.removeItem("bb_auth");
+    localStorage.removeItem("bb_role");
+    location.href = "index.html";
+  };
 }
 
 function esc(s){ return String(s??"").replace(/[&<>"]/g,(c)=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }

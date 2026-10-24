@@ -9,14 +9,28 @@ document.getElementById("evtName").textContent = EVENT_NAME;
 document.title = EVENT_NAME + " — ทายผล";
 
 const ME_KEY = "bb_me";
+const AUTH_KEY = "bb_auth";
+
+// ยามเฝ้าประตู — ยังไม่ได้ล็อกอิน → ส่งกลับหน้าเข้าสู่ระบบ · เป็นผู้ดูแล → ส่งไปหน้าผู้ดูแล
+if (localStorage.getItem(AUTH_KEY) !== "1" || !localStorage.getItem(ME_KEY)) {
+  location.replace("index.html");
+} else if (localStorage.getItem("bb_role") === "admin") {
+  location.replace("admin.html");
+}
+
 let state = null;        // { participants, phase }
 let me = localStorage.getItem(ME_KEY) || null;
+
+// ชื่อ "Admin" เป็นผู้คุมเกม ไม่ใช่ผู้เล่น → ไม่ให้โผล่ในเกม (เลือกชื่อ/ทาย/คะแนน/เฉลย)
+const isAdmin = (p) => p && p.name.trim().toLowerCase() === "admin";
+const players = () => (state?.participants || []).filter((p) => !isAdmin(p));
 
 function meValid() {
   return me && state && state.participants.some((p) => p.id === me);
 }
 function setMe(id) { me = id; localStorage.setItem(ME_KEY, id); render(); }
-function clearMe() { me = null; localStorage.removeItem(ME_KEY); render(); }
+// ออกจากระบบ (ใช้ตอน "ให้คนถัดไป" / ยกเลิก / ถูกลบชื่อ) → กลับไปหน้าล็อกอิน
+function clearMe() { localStorage.removeItem(ME_KEY); localStorage.removeItem(AUTH_KEY); location.href = "index.html"; }
 
 watchState((s) => {
   state = s;
@@ -47,7 +61,7 @@ async function render() {
 
 /* ---------- เลือกชื่อตัวเอง ---------- */
 function renderPickName() {
-  const opts = state.participants
+  const opts = players()
     .map((p) => `<option value="${p.id}">${esc(p.name)}</option>`).join("");
   app.innerHTML = `
     <div class="card">
@@ -89,11 +103,11 @@ async function renderPlay() {
     return;
   }
 
-  const others = state.participants.filter((p) => p.id !== me);
+  const others = players().filter((p) => p.id !== me);
   const truthOpts = (selId) => `<option value="">— เลือก —</option>` +
     others.map((p) => `<option value="${p.id}" ${selId===p.id?"selected":""}>${esc(p.name)}</option>`).join("");
   const guessOpts = (forId, selId) => `<option value="">— ยังไม่ทาย —</option>` +
-    state.participants.filter((p) => p.id !== forId)
+    players().filter((p) => p.id !== forId)
       .map((p) => `<option value="${p.id}" ${selId===p.id?"selected":""}>${esc(p.name)}</option>`).join("");
 
   const rows = others.map((p) => {
@@ -145,12 +159,12 @@ async function renderPlay() {
 /* ---------- หน้าเฉลย ---------- */
 async function renderResults() {
   const [truth, guesses] = await Promise.all([getTruthOnce(), getGuessesOnce()]);
-  const scores = computeScores(state.participants, truth, guesses);
+  const scores = computeScores(players(), truth, guesses);
   const myScore = meValid() ? scores.find((s) => s.id === me) : null;
 
   let mine = "";
   if (myScore) {
-    const total = state.participants.length - 1;
+    const total = players().length - 1;
     mine = `<div class="card center">
       <h2>คะแนนของคุณ</h2>
       <div style="font-size:3rem;font-weight:800;color:var(--blue)">${myScore.correct}<span style="font-size:1.2rem;color:var(--muted)">/${total}</span></div>
@@ -166,7 +180,7 @@ async function renderResults() {
       <div class="sc">${s.correct}</div></div>`;
   }).join("");
 
-  const answers = state.participants.map((p) =>
+  const answers = players().map((p) =>
     `<tr><td>${esc(p.name)}</td><td>→ ${esc(nameOf(state.participants, truth[p.id]?truth[p.id].drew:null))}</td></tr>`
   ).join("");
 

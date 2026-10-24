@@ -4,6 +4,10 @@ import { watchState, watchTruth, watchGuesses, computeScores } from "./db.js";
 const app = document.getElementById("app");
 let state = null, truth = {}, guesses = [];
 
+// ชื่อ "Admin" เป็นผู้คุมเกม ไม่ใช่ผู้เล่น → ไม่นับ/ไม่โชว์ในกระดาน
+const isAdmin = (p) => p && p.name.trim().toLowerCase() === "admin";
+const players = () => (state?.participants || []).filter((p) => !isAdmin(p));
+
 watchState((s) => { state = s; render(); });
 watchTruth((m) => { truth = m; render(); });
 watchGuesses((a) => { guesses = a; render(); });
@@ -11,7 +15,7 @@ watchGuesses((a) => { guesses = a; render(); });
 function render() {
   if (!state) return;
   if (state.phase !== "revealed") {
-    const t = Object.keys(truth).length, g = guesses.length, n = (state.participants||[]).length;
+    const t = Object.keys(truth).length, g = guesses.length, n = players().length;
     app.innerHTML = `
       <div style="text-align:center;padding-top:60px">
         <img src="assets/logo_white.png" style="height:70px;margin-bottom:20px">
@@ -26,7 +30,7 @@ function render() {
       </div>`;
     return;
   }
-  const scores = computeScores(state.participants, truth, guesses);
+  const scores = computeScores(players(), truth, guesses);
   const lb = scores.map((s) => {
     const cls = s.rank===1?"top1":s.rank===2?"top2":s.rank===3?"top3":"";
     const medal = s.rank===1?"🥇":s.rank===2?"🥈":s.rank===3?"🥉":s.rank;

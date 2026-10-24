@@ -3,22 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Buddy & Budder — ทายผล</title>
+<title>Buddy & Budder — เข้าสู่ระบบ</title>
 <link rel="icon" href="assets/app_icon.png">
 <link rel="stylesheet" href="assets/app.css">
 </head>
-<body>
-<header class="top">
-  <img src="assets/logo_white.png" alt="logo">
-  <span class="t" id="evtName">Buddy &amp; Budder</span>
-  <span class="sp"></span>
-  <span class="pill" id="meTag"></span>
-</header>
-
-<div class="wrap" id="app">
-  <div class="card center"><h2>กำลังโหลด…</h2></div>
-</div>
-
-<script type="module" src="assets/player.js"></script>
+<body data-page="login">
+  <main id="app">
+    <div class="login-bg"><div class="login-card"><p class="login-quote">กำลังโหลด…</p></div></div>
+  </main>
+  <script type="module" src="assets/login.js"></script>
 </body>
 </html>

@@ -7,14 +7,29 @@
 <link rel="icon" href="assets/app_icon.png">
 <link rel="stylesheet" href="assets/app.css">
 </head>
-<body>
-<header class="top">
-  <img src="assets/logo_white.png" alt="logo">
-  <span class="t">แผงควบคุมผู้ดูแล</span>
-  <span class="sp"></span>
-  <span class="pill" id="phaseTag">—</span>
-</header>
-<div class="wrap wide" id="app"><div class="card center"><h2>กำลังโหลด…</h2></div></div>
+<body data-page="admin">
+<div class="shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="side-brand"><img src="assets/logo_white.png" alt="Buddy & Budder"></div>
+    <nav class="side-nav">
+      <a href="play.html" class="nav-item"><span class="ic">🏠</span>หน้าหลัก</a>
+      <a href="board.html" class="nav-item"><span class="ic">🏆</span>ประกาศผล</a>
+      <a href="admin.html" class="nav-item active"><span class="ic">⚙️</span>ผู้ดูแล</a>
+    </nav>
+    <div class="side-foot">Buddy &amp; Budder</div>
+  </aside>
+  <div class="content">
+    <header class="topbar">
+      <button class="nav-burger" id="navBurger" aria-label="เมนู">☰</button>
+      <span class="page-title">แผงควบคุมผู้ดูแล</span>
+      <span class="sp"></span>
+      <span class="pill" id="phaseTag">—</span>
+      <button class="bell" aria-label="การแจ้งเตือน">🔔</button>
+    </header>
+    <main class="wrap wide" id="app"><div class="card center"><h2>กำลังโหลด…</h2></div></main>
+  </div>
+</div>
+<script defer src="assets/shell.js"></script>
 <script type="module" src="assets/admin.js"></script>
 </body>
 </html>

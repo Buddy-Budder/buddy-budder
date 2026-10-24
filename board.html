@@ -7,10 +7,30 @@
 <link rel="icon" href="assets/app_icon.png">
 <link rel="stylesheet" href="assets/app.css">
 </head>
-<body class="board-bg">
-<div class="board-wrap" id="app">
-  <div style="text-align:center;padding-top:80px"><h1>กำลังโหลด…</h1></div>
+<body data-page="board">
+<div class="shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="side-brand"><img src="assets/logo_white.png" alt="Buddy & Budder"></div>
+    <nav class="side-nav">
+      <a href="play.html" class="nav-item"><span class="ic">🏠</span>หน้าหลัก</a>
+      <a href="board.html" class="nav-item active"><span class="ic">🏆</span>ประกาศผล</a>
+      <a href="admin.html" class="nav-item"><span class="ic">⚙️</span>ผู้ดูแล</a>
+    </nav>
+    <div class="side-foot">Buddy &amp; Budder</div>
+  </aside>
+  <div class="content board">
+    <header class="topbar">
+      <button class="nav-burger" id="navBurger" aria-label="เมนู">☰</button>
+      <span class="page-title">ประกาศผล</span>
+      <span class="sp"></span>
+      <button class="bell" aria-label="การแจ้งเตือน">🔔</button>
+    </header>
+    <main class="board-bg"><div class="board-wrap" id="app">
+      <div style="text-align:center;padding-top:80px"><h1>กำลังโหลด…</h1></div>
+    </div></main>
+  </div>
 </div>
+<script defer src="assets/shell.js"></script>
 <script type="module" src="assets/board.js"></script>
 </body>
 </html>

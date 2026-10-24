@@ -98,3 +98,82 @@ tr:hover td{background:#f6faff}
 .board-wrap .lb-row.top1 .rk{color:var(--gold)}
 
 .footer{text-align:center;color:var(--muted);font-size:.8rem;margin-top:30px}
+
+/* ===================== APP SHELL (sidebar + topbar) ===================== */
+.shell{display:flex;min-height:100vh}
+
+/* sidebar */
+.sidebar{width:252px;flex-shrink:0;background:linear-gradient(180deg,#0F3D91,#0a2c6b);
+  color:#fff;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;z-index:40}
+.side-brand{padding:22px 20px 16px;display:flex;align-items:center;gap:10px;
+  border-bottom:1px solid rgba(255,255,255,.12)}
+.side-brand img{height:42px;width:auto;max-width:180px;object-fit:contain}
+.side-nav{padding:16px 12px;display:flex;flex-direction:column;gap:6px;flex:1}
+.nav-item{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;
+  color:rgba(255,255,255,.82);text-decoration:none;font-weight:600;font-size:.98rem;transition:.15s}
+.nav-item .ic{font-size:1.15rem;width:22px;text-align:center}
+.nav-item:hover{background:rgba(255,255,255,.1);color:#fff}
+.nav-item.active{background:rgba(255,255,255,.18);color:#fff;box-shadow:inset 3px 0 0 var(--sky)}
+.side-foot{padding:14px 20px;font-size:.78rem;color:rgba(255,255,255,.55);
+  border-top:1px solid rgba(255,255,255,.1)}
+
+/* content column */
+.content{flex:1;min-width:0;display:flex;flex-direction:column}
+.content main{flex:1}
+.topbar{background:#fff;border-bottom:1px solid var(--line);padding:12px 20px;
+  display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:30;
+  box-shadow:0 1px 10px rgba(15,61,145,.05)}
+.topbar .page-title{font-weight:700;color:var(--navy);font-size:1.05rem}
+.topbar .sp{flex:1}
+.topbar .pill{background:#eef4ff;color:var(--navy);padding:5px 14px;border-radius:999px;
+  font-size:.82rem;font-weight:600}
+.bell{background:#f3f8ff;border:1px solid var(--line);border-radius:12px;width:40px;height:40px;
+  font-size:1.1rem;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;position:relative}
+.bell:hover{background:#e6f0ff}
+.bell::after{content:"";position:absolute;top:9px;right:10px;width:7px;height:7px;
+  border-radius:50%;background:#ef4444;border:1.5px solid #fff}
+.nav-burger{display:none;background:none;border:0;font-size:1.4rem;cursor:pointer;color:var(--navy);padding:0 4px}
+
+/* content wrap sizing inside shell */
+.content .wrap{width:100%;max-width:980px;margin:0 auto;padding:22px 20px 60px}
+.content .wrap.wide{max-width:1200px}
+
+/* board page keeps the dark projector look inside the shell */
+.content.board{background:linear-gradient(160deg,#0F3D91,#1e56c4)}
+.content.board .topbar{background:#0a2c6b;border-color:rgba(255,255,255,.14);box-shadow:none}
+.content.board .topbar .page-title{color:#fff}
+.content.board .nav-burger{color:#fff}
+.content.board .bell{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.2);color:#fff}
+.content.board .board-bg{background:none;min-height:0}
+
+/* backdrop for mobile drawer */
+.backdrop{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:35;display:none}
+.backdrop.show{display:block}
+
+/* responsive: off-canvas sidebar */
+@media(max-width:860px){
+  .sidebar{position:fixed;left:0;top:0;transform:translateX(-100%);
+    transition:transform .22s ease;box-shadow:0 0 40px rgba(0,0,0,.35)}
+  .sidebar.open{transform:translateX(0)}
+  .nav-burger{display:inline-flex}
+  .content .wrap{padding:16px 14px 50px}
+}
+
+/* ===== หน้าเข้าสู่ระบบ (login) ===== */
+.login-bg{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px 16px;
+  background:linear-gradient(160deg,#b9d8fc,#93C5FD 60%)}
+.login-card{width:100%;max-width:420px;background:var(--white);border-radius:24px;
+  box-shadow:0 20px 60px rgba(8,30,80,.35);padding:34px 28px;text-align:center;animation:pop .35s ease}
+@keyframes pop{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.login-logo{width:168px;max-width:64%;height:auto;margin:0 auto 10px;display:block}
+.login-card h1{margin:4px 0 2px;color:var(--navy);font-size:1.55rem}
+.login-quote{color:var(--muted);font-size:.95rem;font-style:italic;margin:0 0 22px;line-height:1.55}
+.login-card .field{margin-bottom:14px;text-align:left}
+.login-card label{text-align:left}
+.login-card .btn.big{margin-top:6px}
+.pin-input{text-align:center;letter-spacing:.7em;font-size:1.4rem;font-weight:700;padding-left:.7em!important}
+.pin-input::placeholder{letter-spacing:.35em;font-weight:400;font-size:1.1rem;color:#c7d3ea}
+.login-note{margin-bottom:14px;text-align:center}
+.login-switch{margin:18px 0 0;font-size:.9rem;color:var(--muted)}
+.login-switch a{font-weight:600;cursor:pointer;color:var(--blue)}
+@media(max-width:480px){.login-card{padding:26px 20px}.login-logo{width:132px}}
